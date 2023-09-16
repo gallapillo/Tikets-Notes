@@ -3,6 +3,7 @@ package com.gallapillo.tiketsnotes.presentation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -22,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gallapillo.tiketsnotes.domain.model.Note
 import com.gallapillo.tiketsnotes.presentation.theme.TiketsNotesTheme
+import com.gallapillo.tiketsnotes.presentation.theme.noteColors
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -132,13 +134,14 @@ fun NoteCard(
         modifier = Modifier
             .width(220.dp)
             .height(220.dp)
-            .padding(12.dp),
+            .padding(12.dp)
+            .background(color = noteColors[note.color]),
         shape = RoundedCornerShape(20.dp)
     ) {
         Column {
-            Text(text = "Title", modifier = Modifier.padding(top = 12.dp, start = 8.dp, end = 8.dp))
+            Text(text = note.title, modifier = Modifier.padding(top = 12.dp, start = 8.dp, end = 8.dp))
             Spacer(modifier = Modifier.height(16.dp))
-            Text(text = "Body of lorem test lopper prepare", modifier = Modifier.padding(horizontal = 8.dp))
+            Text(text = note.text, modifier = Modifier.padding(horizontal = 8.dp))
             Spacer(modifier = Modifier.height(16.dp))
             Row(
                 horizontalArrangement = Arrangement.End,
