@@ -1,9 +1,9 @@
 package com.gallapillo.tiketsnotes.presentation
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -102,11 +102,22 @@ class MainActivity : ComponentActivity() {
                                         horizontalArrangement = Arrangement.Center,
                                         modifier = Modifier.fillMaxWidth()
                                     ) {
-                                        Button(onClick = { }) {
+                                        Button(onClick = {
+                                            if (name.isNotEmpty() && text.isNotEmpty()) {
+                                                viewModel.addNote(name = name, text = text)
+                                                name = ""
+                                                text = ""
+                                                showBottomSheet = false
+                                            } else
+                                                Toast.makeText(
+                                                    this@MainActivity,
+                                                    "Empty text or name!",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                        }) {
                                             Text(text = "Create Note")
                                         }
                                     }
-                                    // TODO: MAKE YOUR TEXT KSK
                                 }
                             }
 
@@ -134,12 +145,14 @@ fun NoteCard(
         modifier = Modifier
             .width(220.dp)
             .height(220.dp)
-            .padding(12.dp)
-            .background(color = noteColors[note.color]),
-        shape = RoundedCornerShape(20.dp)
+            .padding(12.dp),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = noteColors[note.color],
+        )
     ) {
         Column {
-            Text(text = note.title, modifier = Modifier.padding(top = 12.dp, start = 8.dp, end = 8.dp))
+            Text(text = note.name, modifier = Modifier.padding(top = 12.dp, start = 8.dp, end = 8.dp))
             Spacer(modifier = Modifier.height(16.dp))
             Text(text = note.text, modifier = Modifier.padding(horizontal = 8.dp))
             Spacer(modifier = Modifier.height(16.dp))

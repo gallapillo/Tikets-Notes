@@ -9,7 +9,7 @@ class AddNoteUseCase(
 ) {
     @Throws(InvalidClassException::class)
     suspend operator fun invoke(note: Note) {
-        if (note.title.isBlank()) {
+        if (note.name.isBlank()) {
             throw InvalidClassException("The title is empty")
         }
         if (note.text.isBlank()) {
