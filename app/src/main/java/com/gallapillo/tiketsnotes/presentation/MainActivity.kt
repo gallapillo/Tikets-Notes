@@ -19,6 +19,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.gallapillo.tiketsnotes.domain.model.Note
 import com.gallapillo.tiketsnotes.presentation.theme.TiketsNotesTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -32,6 +34,8 @@ class MainActivity : ComponentActivity() {
             var showBottomSheet by remember { mutableStateOf(false) }
             var name by rememberSaveable { mutableStateOf("") }
             var text by rememberSaveable { mutableStateOf("") }
+
+            val viewModel = hiltViewModel<NotesViewModel>()
 
             TiketsNotesTheme {
                 Scaffold(
@@ -47,67 +51,72 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 ) { paddingValues ->
-                    if (showBottomSheet) {
-                        ModalBottomSheet(
-                            onDismissRequest = {
-                                showBottomSheet = false
-                            },
-                            sheetState = sheetState,
-                            modifier = Modifier.height(600.dp)
-                        ) {
-                            // Sheet content
-                            Row(
-                                horizontalArrangement = Arrangement.Center,
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Text(text = "Create your own note")
-                            }
-                            Spacer(modifier = Modifier.height(16.dp))
-                            Row(
-                                horizontalArrangement = Arrangement.Center,
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                OutlinedTextField(
-                                    value = name,
-                                    onValueChange = {
-                                        name = it
+                    viewModel.loadAllNotes()
+                    when (val result = viewModel.state.value) {
+                        is NoteState.LoadNotes -> {
+                            if (showBottomSheet) {
+                                ModalBottomSheet(
+                                    onDismissRequest = {
+                                        showBottomSheet = false
                                     },
-                                    label = { Text("Name") }
-                                )
-                            }
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Row(
-                                horizontalArrangement = Arrangement.Center,
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                OutlinedTextField(
-                                    value = text,
-                                    onValueChange = {
-                                        text = it
-                                    },
-                                    label = { Text("Text") }
-                                )
-                            }
-                            Spacer(modifier = Modifier.height(16.dp))
-                            Row(
-                                horizontalArrangement = Arrangement.Center,
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Button(onClick = { }) {
-                                    Text(text = "Create Note")
+                                    sheetState = sheetState,
+                                    modifier = Modifier.height(600.dp)
+                                ) {
+                                    // Sheet content
+                                    Row(
+                                        horizontalArrangement = Arrangement.Center,
+                                        modifier = Modifier.fillMaxWidth()
+                                    ) {
+                                        Text(text = "Create your own note")
+                                    }
+                                    Spacer(modifier = Modifier.height(16.dp))
+                                    Row(
+                                        horizontalArrangement = Arrangement.Center,
+                                        modifier = Modifier.fillMaxWidth()
+                                    ) {
+                                        OutlinedTextField(
+                                            value = name,
+                                            onValueChange = {
+                                                name = it
+                                            },
+                                            label = { Text("Name") }
+                                        )
+                                    }
+                                    Spacer(modifier = Modifier.height(4.dp))
+                                    Row(
+                                        horizontalArrangement = Arrangement.Center,
+                                        modifier = Modifier.fillMaxWidth()
+                                    ) {
+                                        OutlinedTextField(
+                                            value = text,
+                                            onValueChange = {
+                                                text = it
+                                            },
+                                            label = { Text("Text") }
+                                        )
+                                    }
+                                    Spacer(modifier = Modifier.height(16.dp))
+                                    Row(
+                                        horizontalArrangement = Arrangement.Center,
+                                        modifier = Modifier.fillMaxWidth()
+                                    ) {
+                                        Button(onClick = { }) {
+                                            Text(text = "Create Note")
+                                        }
+                                    }
+                                    // TODO: MAKE YOUR TEXT KSK
                                 }
                             }
-                            // TODO: MAKE YOUR TEXT KSK
-                        }
-                    }
 
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(paddingValues)
-                    ) {
-                        CategoryChips()
-                        NotesLazyGrid()
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(paddingValues)
+                            ) {
+                                NotesLazyGrid(result.notes)
+                            }
+                        }
+                        else -> {}
                     }
                 }
             }
@@ -116,7 +125,9 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun NoteCard() {
+fun NoteCard(
+    note: Note
+) {
     Card(
         modifier = Modifier
             .width(220.dp)
@@ -143,6 +154,7 @@ fun NoteCard() {
 
 @Composable
 fun CategoryChips() {
+    // TODO: SAVE HERE MAYBE RELEASE IN 1.1.0!
     LazyRow(content = {
         items(10) {
             Card(modifier = Modifier
@@ -156,12 +168,12 @@ fun CategoryChips() {
 }
 
 @Composable
-fun NotesLazyGrid() {
+fun NotesLazyGrid(notes: List<Note>) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         content = {
-            items(4) {
-                NoteCard()
+            items(notes.size) { notesKey ->
+                NoteCard(notes[notesKey])
             }
         }
     )
@@ -173,7 +185,7 @@ fun DefaultPreview() {
     TiketsNotesTheme {
         Column(modifier = Modifier.fillMaxSize()) {
             CategoryChips()
-            NotesLazyGrid()
+            NotesLazyGrid(listOf())
         }
     }
 }
