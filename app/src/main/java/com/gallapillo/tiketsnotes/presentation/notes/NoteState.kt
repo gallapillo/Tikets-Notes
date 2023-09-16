@@ -1,4 +1,4 @@
-package com.gallapillo.tiketsnotes.presentation
+package com.gallapillo.tiketsnotes.presentation.notes
 
 import com.gallapillo.tiketsnotes.domain.model.Note
 

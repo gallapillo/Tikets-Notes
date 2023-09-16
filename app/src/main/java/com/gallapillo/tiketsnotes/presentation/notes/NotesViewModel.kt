@@ -1,4 +1,4 @@
-package com.gallapillo.tiketsnotes.presentation
+package com.gallapillo.tiketsnotes.presentation.notes
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
