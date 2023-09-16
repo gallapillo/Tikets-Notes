@@ -43,7 +43,7 @@ class NotesViewModel @Inject constructor(
     }
 
     fun updateNote(name: String, text: String, note: Note) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val updatedNote = Note(
                 name = name,
                 text = text,
@@ -53,6 +53,13 @@ class NotesViewModel @Inject constructor(
                 id = note.id
             )
             noteUseCase.updateNote(updatedNote)
+            loadAllNotes()
+        }
+    }
+
+    fun deleteNote(noteToDelete: Note) {
+        viewModelScope.launch(Dispatchers.IO) {
+            noteUseCase.deleteNote(noteToDelete)
             loadAllNotes()
         }
     }

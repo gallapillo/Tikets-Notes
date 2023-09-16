@@ -126,7 +126,7 @@ fun EditNoteDialog(
                ) {
                    Button(onClick = {
                        if (oldText != text.value || oldName != name.value)
-                        onSubmit(text.value, name.value)
+                        onSubmit(name.value, text.value)
                    }) {
                        Text(text = "Edit Note")
                    }

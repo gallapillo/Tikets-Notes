@@ -134,7 +134,7 @@ class MainActivity : ComponentActivity() {
                                     result.notes,
                                     NoteUIStateEvent(
                                         onDeleteNote = { noteToDelete ->
-
+                                            viewModel.deleteNote(noteToDelete)
                                         },
                                         onUpdateNote = { name, text, noteToUpdate ->
                                             viewModel.updateNote(name, text, noteToUpdate)
@@ -199,7 +199,8 @@ fun NoteCard(
                     DeleteNoteDialog(
                         onDismissRequest = { openDeleteNoteDialog.value = false },
                         onConfirmation = {
-
+                            noteUIStateEvent.onDeleteNote(note)
+                            openDeleteNoteDialog.value = false
                         },
                         dialogTitle = "Delete Note",
                         dialogText = "Are you sure to remove note!",
@@ -213,6 +214,7 @@ fun NoteCard(
                             noteUIStateEvent.onUpdateNote(
                                 updatedName, updatedText, note
                             )
+                            openEditNoteDialog.value = false
                         },
                         onDismiss = {
                             openEditNoteDialog.value = false
