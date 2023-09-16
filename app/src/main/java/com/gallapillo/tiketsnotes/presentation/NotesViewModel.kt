@@ -5,6 +5,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gallapillo.tiketsnotes.domain.model.Note
 import com.gallapillo.tiketsnotes.domain.use_case.database.NoteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -25,6 +26,19 @@ class NotesViewModel @Inject constructor(
             noteUseCase.getNotes().onEach {  notes ->
                 _state.value = NoteState.LoadNotes(notes)
             }.launchIn(viewModelScope)
+        }
+    }
+
+    fun addNote(name: String, text: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val note = Note(
+                name = name,
+                text = text,
+                createdAt = System.currentTimeMillis(),
+                updatedAt = System.currentTimeMillis()
+            )
+            noteUseCase.addNote(note)
+            loadAllNotes()
         }
     }
 }

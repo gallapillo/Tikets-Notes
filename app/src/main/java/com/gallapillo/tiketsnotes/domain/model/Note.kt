@@ -8,7 +8,7 @@ import kotlin.random.Random
     tableName = Note.TABLE_NAME
 )
 data class Note(
-    val title: String,
+    val name: String,
     val text: String,
     val createdAt: Long,
     val updatedAt: Long,
