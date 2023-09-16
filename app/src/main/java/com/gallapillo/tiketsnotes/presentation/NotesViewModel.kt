@@ -41,4 +41,19 @@ class NotesViewModel @Inject constructor(
             loadAllNotes()
         }
     }
+
+    fun updateNote(name: String, text: String, note: Note) {
+        viewModelScope.launch {
+            val updatedNote = Note(
+                name = name,
+                text = text,
+                color = note.color,
+                createdAt = note.createdAt,
+                updatedAt = System.currentTimeMillis(),
+                id = note.id
+            )
+            noteUseCase.updateNote(updatedNote)
+            loadAllNotes()
+        }
+    }
 }

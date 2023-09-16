@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -22,8 +23,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gallapillo.tiketsnotes.domain.model.Note
+import com.gallapillo.tiketsnotes.presentation.components.DeleteNoteDialog
+import com.gallapillo.tiketsnotes.presentation.components.EditNoteDialog
 import com.gallapillo.tiketsnotes.presentation.theme.TiketsNotesTheme
 import com.gallapillo.tiketsnotes.presentation.theme.noteColors
+import com.gallapillo.tiketsnotes.presentation.ui_event.NoteUIStateEvent
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -126,7 +130,17 @@ class MainActivity : ComponentActivity() {
                                     .fillMaxSize()
                                     .padding(paddingValues)
                             ) {
-                                NotesLazyGrid(result.notes)
+                                NotesLazyGrid(
+                                    result.notes,
+                                    NoteUIStateEvent(
+                                        onDeleteNote = { noteToDelete ->
+
+                                        },
+                                        onUpdateNote = { name, text, noteToUpdate ->
+                                            viewModel.updateNote(name, text, noteToUpdate)
+                                        }
+                                    )
+                                )
                             }
                         }
                         else -> {}
@@ -139,8 +153,12 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun NoteCard(
-    note: Note
+    note: Note,
+    noteUIStateEvent: NoteUIStateEvent = NoteUIStateEvent()
 ) {
+    val openDeleteNoteDialog = remember { mutableStateOf(false) }
+    val openEditNoteDialog = remember { mutableStateOf(false) }
+
     Card(
         modifier = Modifier
             .width(220.dp)
@@ -159,10 +177,48 @@ fun NoteCard(
             Row(
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.Bottom,
-                modifier = Modifier.fillMaxWidth().padding(end = 8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(end = 8.dp),
             ) {
-                Icon(Icons.Default.Edit, contentDescription = "Edit Note")
-                Icon(Icons.Default.Delete, contentDescription = "Delete Note")
+                Icon(
+                    Icons.Default.Edit,
+                    contentDescription = "Edit Note",
+                    modifier = Modifier.clickable {
+                        openEditNoteDialog.value = true
+                    }
+                )
+                Icon(
+                    Icons.Default.Delete,
+                    contentDescription = "Delete Note",
+                    modifier = Modifier.clickable {
+                        openDeleteNoteDialog.value = true
+                    }
+                )
+                if (openDeleteNoteDialog.value) {
+                    DeleteNoteDialog(
+                        onDismissRequest = { openDeleteNoteDialog.value = false },
+                        onConfirmation = {
+
+                        },
+                        dialogTitle = "Delete Note",
+                        dialogText = "Are you sure to remove note!",
+                        icon = Icons.Default.Delete
+                    )
+                }
+                if (openEditNoteDialog.value) {
+                    EditNoteDialog(
+                        note = note,
+                        onSubmit = { updatedName, updatedText ->
+                            noteUIStateEvent.onUpdateNote(
+                                updatedName, updatedText, note
+                            )
+                        },
+                        onDismiss = {
+                            openEditNoteDialog.value = false
+                        }
+                    )
+                }
             }
         }
     }
@@ -184,12 +240,15 @@ fun CategoryChips() {
 }
 
 @Composable
-fun NotesLazyGrid(notes: List<Note>) {
+fun NotesLazyGrid(
+    notes: List<Note>,
+    noteUIStateEvent: NoteUIStateEvent = NoteUIStateEvent()
+) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         content = {
             items(notes.size) { notesKey ->
-                NoteCard(notes[notesKey])
+                NoteCard(notes[notesKey], noteUIStateEvent)
             }
         }
     )
