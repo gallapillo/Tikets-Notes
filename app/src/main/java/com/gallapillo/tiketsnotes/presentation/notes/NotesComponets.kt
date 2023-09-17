@@ -121,7 +121,10 @@ fun NoteCard(
         modifier = Modifier
             .width(220.dp)
             .height(220.dp)
-            .padding(12.dp),
+            .padding(12.dp)
+            .clickable {
+                noteUIStateEvent.onClickNote(note)
+            },
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
             containerColor = noteColors[note.color],

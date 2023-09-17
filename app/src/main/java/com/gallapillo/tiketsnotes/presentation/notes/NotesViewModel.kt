@@ -63,4 +63,11 @@ class NotesViewModel @Inject constructor(
             _state.value = NoteState.DeleteNote(noteToDelete)
         }
     }
+
+    fun getNoteById(id: Int) {
+        viewModelScope.launch {
+            val note = noteUseCase.getNoteById(id)
+            _state.value = NoteState.LoadNote(note!!)
+        }
+    }
 }
