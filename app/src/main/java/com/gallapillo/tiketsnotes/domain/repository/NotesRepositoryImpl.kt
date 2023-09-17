@@ -22,4 +22,7 @@ class NotesRepositoryImpl(
         dao.updateNote(note)
     }
 
+    override suspend fun getNoteById(noteId: Int): Note? {
+        return dao.getNoteById(noteId)
+    }
 }

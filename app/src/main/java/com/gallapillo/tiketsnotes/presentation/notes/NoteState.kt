@@ -12,4 +12,6 @@ sealed class NoteState {
     class UpdateNote(val updatedNote: Note) : NoteState()
 
     class DeleteNote(val deletedNote: Note) : NoteState()
+
+    class LoadNote(val note: Note) : NoteState()
 }

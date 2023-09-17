@@ -83,6 +83,5 @@ dependencies {
     kapt "androidx.hilt:hilt-compiler:1.0.0"
     implementation 'androidx.hilt:hilt-navigation-compose:1.0.0-alpha03'
 
-    def nav_version = "2.4.2"
     implementation("androidx.navigation:navigation-compose:$nav_version")
 }
