@@ -6,4 +6,10 @@ sealed class NoteState {
     object LoadingNotes : NoteState()
 
     class LoadNotes(val notes: List<Note>) : NoteState()
+
+    class AddNote(val addedNote: Note) : NoteState()
+
+    class UpdateNote(val updatedNote: Note) : NoteState()
+
+    class DeleteNote(val deletedNote: Note) : NoteState()
 }

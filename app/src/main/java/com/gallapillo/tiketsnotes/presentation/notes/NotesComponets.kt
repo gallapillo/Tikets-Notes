@@ -24,7 +24,7 @@ import com.gallapillo.tiketsnotes.presentation.components.DeleteNoteDialog
 import com.gallapillo.tiketsnotes.presentation.components.EditNoteDialog
 import com.gallapillo.tiketsnotes.presentation.theme.TiketsNotesTheme
 import com.gallapillo.tiketsnotes.presentation.theme.noteColors
-import com.gallapillo.tiketsnotes.presentation.ui_event.NoteUIStateEvent
+import com.gallapillo.tiketsnotes.presentation.notes.ui_event.NoteUIStateEvent
 
 @Preview(showBackground = true)
 @Composable

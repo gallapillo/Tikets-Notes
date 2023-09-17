@@ -8,10 +8,10 @@ import kotlin.random.Random
     tableName = Note.TABLE_NAME
 )
 data class Note(
-    val name: String,
-    val text: String,
+    var name: String,
+    var text: String,
     val createdAt: Long,
-    val updatedAt: Long,
+    var updatedAt: Long,
     val color: Int = Random.nextInt(0, 15),
     @PrimaryKey val id: Int? = null
 ) {

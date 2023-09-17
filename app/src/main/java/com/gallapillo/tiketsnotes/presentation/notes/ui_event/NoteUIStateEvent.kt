@@ -1,4 +1,4 @@
-package com.gallapillo.tiketsnotes.presentation.ui_event
+package com.gallapillo.tiketsnotes.presentation.notes.ui_event
 
 import com.gallapillo.tiketsnotes.domain.model.Note
 
