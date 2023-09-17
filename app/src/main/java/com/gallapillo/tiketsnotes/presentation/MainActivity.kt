@@ -17,12 +17,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.gallapillo.tiketsnotes.domain.model.Note
 import com.gallapillo.tiketsnotes.presentation.components.CreateNoteBottomSheet
 import com.gallapillo.tiketsnotes.presentation.notes.NoteState
 import com.gallapillo.tiketsnotes.presentation.notes.NotesLazyGrid
 import com.gallapillo.tiketsnotes.presentation.notes.NotesViewModel
 import com.gallapillo.tiketsnotes.presentation.theme.TiketsNotesTheme
-import com.gallapillo.tiketsnotes.presentation.ui_event.NoteUIStateEvent
+import com.gallapillo.tiketsnotes.presentation.notes.ui_event.NoteUIStateEvent
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -33,6 +34,7 @@ class MainActivity : ComponentActivity() {
             var showBottomSheet by remember { mutableStateOf(false) }
 
             val viewModel = hiltViewModel<NotesViewModel>()
+            val notes = remember { mutableStateOf( mutableListOf<Note>() ) }
 
             TiketsNotesTheme {
                 Scaffold(
@@ -51,6 +53,8 @@ class MainActivity : ComponentActivity() {
                     viewModel.loadAllNotes()
                     when (val result = viewModel.state.value) {
                         is NoteState.LoadNotes -> {
+                            notes.value = result.notes.toMutableList()
+
                             if (showBottomSheet) {
                                 CreateNoteBottomSheet(
                                     onDismiss = {
@@ -65,7 +69,7 @@ class MainActivity : ComponentActivity() {
 
                             NotesLazyGrid(
                                 modifier = Modifier.fillMaxSize().padding(paddingValues),
-                                notes = result.notes,
+                                notes = notes.value,
                                 noteUIStateEvent = NoteUIStateEvent(
                                     onDeleteNote = { noteToDelete ->
                                         viewModel.deleteNote(noteToDelete)
@@ -75,6 +79,20 @@ class MainActivity : ComponentActivity() {
                                     }
                                 )
                             )
+                        }
+                        is NoteState.AddNote -> {
+                            notes.value.add(result.addedNote)
+                        }
+                        is NoteState.DeleteNote -> {
+                            notes.value.remove(result.deletedNote)
+                        }
+                        is NoteState.UpdateNote -> {
+                            notes.value.find { it.id == result.updatedNote.id }?.name =
+                                result.updatedNote.name
+                            notes.value.find { it.id == result.updatedNote.id }?.text =
+                                result.updatedNote.text
+                            notes.value.find { it.id == result.updatedNote.id }?.updatedAt =
+                                result.updatedNote.updatedAt
                         }
                         else -> {}
                     }

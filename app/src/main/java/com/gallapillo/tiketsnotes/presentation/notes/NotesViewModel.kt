@@ -31,14 +31,14 @@ class NotesViewModel @Inject constructor(
 
     fun addNote(name: String, text: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val note = Note(
+            val noteToAdd = Note(
                 name = name,
                 text = text,
                 createdAt = System.currentTimeMillis(),
                 updatedAt = System.currentTimeMillis()
             )
-            noteUseCase.addNote(note)
-            loadAllNotes()
+            noteUseCase.addNote(noteToAdd)
+            _state.value = NoteState.AddNote(noteToAdd)
         }
     }
 
@@ -53,14 +53,14 @@ class NotesViewModel @Inject constructor(
                 id = note.id
             )
             noteUseCase.updateNote(updatedNote)
-            loadAllNotes()
+            _state.value = NoteState.UpdateNote(updatedNote)
         }
     }
 
     fun deleteNote(noteToDelete: Note) {
         viewModelScope.launch(Dispatchers.IO) {
             noteUseCase.deleteNote(noteToDelete)
-            loadAllNotes()
+            _state.value = NoteState.DeleteNote(noteToDelete)
         }
     }
 }
