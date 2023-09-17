@@ -22,13 +22,15 @@ private val NoteColorNine = Color(0xFFB3E5FC)
 private val NoteColorTen = Color(0xFFFFF9C4)
 private val NoteColorEleven = Color(0xFFFFECB3)
 private val NoteColorTwelfth = Color(0xFFE8EAF6)
-private val NoteColorThird = Color(0xFFDCEDC8)
+private val NoteColorThird = Color(0xFFFFFDE7)
+private val NoteColorForth = Color(0xFFE0F2F1)
+private val NoteColorFifth = Color(0xFFDCEDC8)
 
 val noteColors = listOf(
-    Purple40,
+    NoteColorFifth,
     Purple80,
     Pink80,
-    Pink40,
+    NoteColorForth,
     NoteColorOne,
     NoteColorTwo,
     NoteColorThree,

@@ -17,6 +17,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gallapillo.tiketsnotes.domain.model.Note
@@ -131,9 +132,17 @@ fun NoteCard(
         )
     ) {
         Column {
-            Text(text = note.name, modifier = Modifier.padding(top = 12.dp, start = 8.dp, end = 8.dp))
+            Text(
+                text = note.name,
+                modifier = Modifier.padding(top = 12.dp, start = 8.dp, end = 8.dp),
+                color = Color(0xFF000000)
+            )
             Spacer(modifier = Modifier.height(16.dp))
-            Text(text = note.text, modifier = Modifier.padding(horizontal = 8.dp))
+            Text(
+                text = note.text,
+                modifier = Modifier.padding(horizontal = 8.dp),
+                color = Color(0xFF000000)
+            )
             Spacer(modifier = Modifier.height(16.dp))
             Row(
                 horizontalArrangement = Arrangement.End,
@@ -147,14 +156,16 @@ fun NoteCard(
                     contentDescription = "Edit Note",
                     modifier = Modifier.clickable {
                         openEditNoteDialog.value = true
-                    }
+                    },
+                    tint = Color(0xFF000000)
                 )
                 Icon(
                     Icons.Default.Delete,
                     contentDescription = "Delete Note",
                     modifier = Modifier.clickable {
                         openDeleteNoteDialog.value = true
-                    }
+                    },
+                    tint = Color(0xFF000000)
                 )
                 if (openDeleteNoteDialog.value) {
                     DeleteNoteDialog(
