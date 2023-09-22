@@ -135,21 +135,23 @@ fun NoteCard(
             Text(
                 text = note.name,
                 modifier = Modifier.padding(top = 12.dp, start = 8.dp, end = 8.dp),
-                color = Color(0xFF000000)
+                color = Color(0xFF000000),
+                maxLines = 1
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = note.text,
                 modifier = Modifier.padding(horizontal = 8.dp),
-                color = Color(0xFF000000)
+                color = Color(0xFF000000),
+                maxLines = 4
             )
             Spacer(modifier = Modifier.height(16.dp))
             Row(
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.Bottom,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(end = 8.dp),
+                    .fillMaxSize()
+                    .padding(end = 8.dp, bottom = 12.dp),
             ) {
                 Icon(
                     Icons.Default.Edit,
